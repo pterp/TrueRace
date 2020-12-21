@@ -1,0 +1,12 @@
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.csprojAssemblyReference.cache
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.AssemblyInfoInputs.cache
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.AssemblyInfo.cs
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.csproj.CoreCompileInputs.cache
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\bin\Debug\netstandard2.0\Controller.deps.json
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\bin\Debug\netstandard2.0\Controller.dll
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\bin\Debug\netstandard2.0\Controller.pdb
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\bin\Debug\netstandard2.0\Model.dll
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\bin\Debug\netstandard2.0\Model.pdb
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.csproj.CopyComplete
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.dll
+E:\DocumentenE\BAI\code\TrueRace\TrueRace\Controller\obj\Debug\netstandard2.0\Controller.pdb
