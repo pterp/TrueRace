@@ -446,8 +446,15 @@ namespace TrueRace
             {
                 if (s.Contains('1') && part1 != null)
                 {
-                    char[] temp = part1.Name.ToCharArray();
-                    s = s.Replace('1', temp[0]);
+                    if (part1.Equipment.IsBroken)
+                    {
+                        s = s.Replace('1', '*');
+                    }
+                    else
+                    {
+                        char[] temp = part1.Name.ToCharArray();
+                        s = s.Replace('1', temp[0]);
+                    }
                 }
                 else
                 {
@@ -455,8 +462,15 @@ namespace TrueRace
                 }
                 if (s.Contains('2') && part2 != null)
                 {
-                    char[] temp = part2.Name.ToCharArray();
-                    s = s.Replace('2', temp[0]);
+                    if (part2.Equipment.IsBroken)
+                    {
+                        s = s.Replace('2', '*');
+                    }
+                    else
+                    {
+                        char[] temp = part2.Name.ToCharArray();
+                        s = s.Replace('2', temp[0]);
+                    }
                 }
                 else
                 {

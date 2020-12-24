@@ -65,7 +65,9 @@ namespace Controller
         private void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
             //Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
+            FailEquipment();
             SimulateRace(Participants, track);
+            FixEquipment();
         }
 
         public void SimulateRace(List<IParticipant> part, Track t)
@@ -78,77 +80,86 @@ namespace Controller
                 //find participant on track
                 while (notFound)
                 {
-                    SectionData CurrentSection = getSectionData(current.Value);
-                    //check if participant is on currentsection
-                    if (CurrentSection.Left == participant)
+                    //check if broken
+                    if (!participant.Equipment.IsBroken)
                     {
-                        // if found on left move the participant
-                        notFound = false;
-                        CurrentSection.DistanceLeft += (participant.Equipment.Speed + participant.Equipment.Performance);
-                        //if participant finishes current section move onto the next
-                        if (CurrentSection.DistanceLeft >= SectionLength)
+                        SectionData CurrentSection = getSectionData(current.Value);
+                        //check if participant is on currentsection
+                        if (CurrentSection.Left == participant)
                         {
-                            SectionData next = getSectionData(getNext(current, t).Value);
-                            if (next.Right == null)
+                            // if found on left move the participant
+                            notFound = false;
+                            CurrentSection.DistanceLeft += (participant.Equipment.Speed + participant.Equipment.Performance);
+                            //if participant finishes current section move onto the next
+                            if (CurrentSection.DistanceLeft >= SectionLength)
                             {
-                                next.Right = participant;
-                                next.DistanceRight = CurrentSection.DistanceLeft - SectionLength;
-                                CurrentSection.Left = null;
-                                CurrentSection.DistanceLeft = 0;
-                                drivermoved = true;
-                                IsFinish(participant, getNext(current, t).Value);
-                            }
-                            else if (next.Left == null)
-                            {
-                                next.Left = participant;
-                                next.DistanceLeft = CurrentSection.DistanceLeft - SectionLength;
-                                CurrentSection.Left = null;
-                                CurrentSection.DistanceLeft = 0;
-                                drivermoved = true;
-                                IsFinish(participant, getNext(current, t).Value);
-                            }
-                            else // if next section is full stay on current section
-                            {
-                                CurrentSection.DistanceLeft = SectionLength;
+                                SectionData next = getSectionData(getNext(current, t).Value);
+                                if (next.Right == null)
+                                {
+                                    next.Right = participant;
+                                    next.DistanceRight = CurrentSection.DistanceLeft - SectionLength;
+                                    CurrentSection.Left = null;
+                                    CurrentSection.DistanceLeft = 0;
+                                    drivermoved = true;
+                                    IsFinish(participant, getNext(current, t).Value);
+                                }
+                                else if (next.Left == null)
+                                {
+                                    next.Left = participant;
+                                    next.DistanceLeft = CurrentSection.DistanceLeft - SectionLength;
+                                    CurrentSection.Left = null;
+                                    CurrentSection.DistanceLeft = 0;
+                                    drivermoved = true;
+                                    IsFinish(participant, getNext(current, t).Value);
+                                }
+                                else // if next section is full stay on current section
+                                {
+                                    CurrentSection.DistanceLeft = SectionLength;
+                                }
                             }
                         }
-                    }
-                    else if (CurrentSection.Right == participant)
-                    {
-                        // if found on left move the participant
-                        notFound = false;
-                        CurrentSection.DistanceRight += (participant.Equipment.Speed + participant.Equipment.Performance);
-                        //if participant finishes current section move onto the next
-                        if (CurrentSection.DistanceRight >= SectionLength)
+                        else if (CurrentSection.Right == participant)
                         {
-                            SectionData next = getSectionData(getNext(current, t).Value);
-                            if (next.Right == null)
+                            // if found on left move the participant
+                            notFound = false;
+                            CurrentSection.DistanceRight += (participant.Equipment.Speed + participant.Equipment.Performance);
+                            //if participant finishes current section move onto the next
+                            if (CurrentSection.DistanceRight >= SectionLength)
                             {
-                                next.Right = participant;
-                                next.DistanceRight = CurrentSection.DistanceRight - SectionLength;
-                                CurrentSection.Right = null;
-                                CurrentSection.DistanceRight = 0;
-                                drivermoved = true;
-                                IsFinish(participant, getNext(current, t).Value);
-                            }
-                            else if (next.Left == null)
-                            {
-                                next.Left = participant;
-                                next.DistanceLeft = CurrentSection.DistanceRight - SectionLength;
-                                CurrentSection.Right = null;
-                                CurrentSection.DistanceRight = 0;
-                                drivermoved = true;
-                                IsFinish(participant, getNext(current, t).Value);
-                            }
-                            else // if next section is full stay on current section
-                            {
-                                CurrentSection.DistanceRight = SectionLength;
+                                SectionData next = getSectionData(getNext(current, t).Value);
+                                if (next.Right == null)
+                                {
+                                    next.Right = participant;
+                                    next.DistanceRight = CurrentSection.DistanceRight - SectionLength;
+                                    CurrentSection.Right = null;
+                                    CurrentSection.DistanceRight = 0;
+                                    drivermoved = true;
+                                    IsFinish(participant, getNext(current, t).Value);
+                                }
+                                else if (next.Left == null)
+                                {
+                                    next.Left = participant;
+                                    next.DistanceLeft = CurrentSection.DistanceRight - SectionLength;
+                                    CurrentSection.Right = null;
+                                    CurrentSection.DistanceRight = 0;
+                                    drivermoved = true;
+                                    IsFinish(participant, getNext(current, t).Value);
+                                }
+                                else // if next section is full stay on current section
+                                {
+                                    CurrentSection.DistanceRight = SectionLength;
+                                }
                             }
                         }
+                        else //if not on current section continue to next section
+                        {
+                            current = current.Next;
+                        }
                     }
-                    else //if not on current section continue to next section
+                    else// if broken
                     {
-                        current = current.Next;
+                        notFound = false;
+                        drivermoved = true;
                     }
                 }
             }
@@ -160,6 +171,35 @@ namespace Controller
             if (Participants.Count == 0)
             {
                 EndRace();
+            }
+        }
+
+        public void FixEquipment()
+        {
+            foreach (IParticipant part in Participants)
+            {
+                if (part.Equipment.IsBroken) 
+                { 
+                    if (part.Equipment.Quality >= _random.Next(0, 100))
+                    {
+                        part.Equipment.IsBroken = false;
+                    }
+                }
+            }
+
+        }
+        public void FailEquipment()
+        {
+            foreach (IParticipant part in Participants)
+            {
+                if (part.Equipment.Quality < _random.Next(0,100))
+                {
+                    part.Equipment.IsBroken = true;
+                    if (part.Equipment.Performance < 0)
+                    {
+                        part.Equipment.Performance--;
+                    }                    
+                }                
             }
         }
         // get the next section of the track
@@ -297,7 +337,7 @@ namespace Controller
             for (int i = 0; i < Participants.Count; i++)
             {
                 Participants[i].Equipment.Performance = _random.Next(1, 11);
-                Participants[i].Equipment.Quality = _random.Next(1, 11);
+                Participants[i].Equipment.Quality = _random.Next(85, 95);
             }
         }
         private Dictionary<Section, SectionData> _positions;
