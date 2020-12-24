@@ -19,9 +19,9 @@ namespace Controller
 
         public static void addparticipants()
         {
-            IEquipment car1 = new Car(100, 100, 100);
-            IEquipment car2 = new Car(100, 100, 100);
-            IEquipment car3 = new Car(100, 100, 100);
+            IEquipment car1 = new Car(30, 30, 30);
+            IEquipment car2 = new Car(30, 30, 30);
+            IEquipment car3 = new Car(30, 30, 30);
             IParticipant part1 = new Driver("Bert",0,car1, Teamcolors.Green);
             IParticipant part2 = new Driver("Ernie", 0, car2, Teamcolors.Yellow);
             IParticipant part3 = new Driver("Pino", 0, car3, Teamcolors.Yellow);
@@ -67,9 +67,13 @@ namespace Controller
 
         public static void NextRace()
         {
-            Track temp = race1.NextTrack();
-            if (temp != null) { 
-                currentRace = new Race(race1.Participants, temp);
+            Track track = race1.NextTrack();
+            if (track != null) { 
+                currentRace = new Race(race1.Participants, track);
+            }
+            else
+            {
+                Console.WriteLine("Race Ended");
             }
         }
     }

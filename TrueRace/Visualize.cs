@@ -12,22 +12,19 @@ namespace TrueRace
     {
         public static void Initialize()
         {
-
+           Race.RaceStarted += OnNewRace;
+            //Data.currentRace.DriversChanged += OnDriversChanged;
         }
-        //
-        public static void driversChanged()
+
+        public static void OnNewRace(object o, RaceStartedEventArgs e)
         {
-            Data.currentRace.DriversChanged += (s, args) =>
-            {
-                DrawTrack(args.track);
-            };
-
-
-            Data.currentRace.OnDriversChanged();
+            e.Race.DriversChanged += OnDriversChanged;
         }
-
-
-
+        
+        public static void OnDriversChanged(object o, DriversChangedEventArgs args)
+        {
+            DrawTrack(args.track);
+        }
 
 
         private const int V = 5;
@@ -80,7 +77,7 @@ namespace TrueRace
         //private static string[] _straightNS = { "o  o", "o  o", "o  o", "o  o", };
         #endregion
         public static void DrawTrack(Track t)
-        {
+        {            
             int Direction = 1;
             int[] parameters = FindDrawParameters(t, Direction);
             string[,] stringarray = CreateDrawTrack(t, Direction, parameters);
@@ -98,7 +95,6 @@ namespace TrueRace
                 {
                     if (Direction == 0)
                     {
-
                         y--;
                         if (y < ymin)
                         {
@@ -473,6 +469,8 @@ namespace TrueRace
         {
             int xmax = parameters[2];
             int ymax = parameters[3];
+            //clear console
+            Console.Clear();
             //write the track to console
             for (int y = 0; y < (ymax) * 4; y++)
             {

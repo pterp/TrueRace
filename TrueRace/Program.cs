@@ -10,8 +10,9 @@ namespace TrueRace
             Console.WriteLine("Hello World!");
             Data.initialize();
             Data.NextRace();
-            Console.WriteLine(Data.currentRace.track.Name);
-            Visualize.DrawTrack(Data.currentRace.track);
+            Visualize.Initialize();
+            Data.currentRace.StartVisualize();
+
             for ( ; ; )
             {
                 Thread.Sleep(100);
