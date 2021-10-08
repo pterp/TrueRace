@@ -19,13 +19,16 @@ namespace Controller
         public static event EventHandler<RaceStartedEventArgs> RaceStarted;
         public Track track { get; set; }
         public List<IParticipant> Participants { get; set; }
+        public List<IParticipant> StaticParticipants { get; set; }
         public DateTime StartTime { get; set; }
         private Random _random { get; set; }
-
+        private Queue<int> Scores { get; set; }
 
 
         public Race(List<IParticipant> Participantlist, Track tracki)
         {
+            StaticParticipants = Participantlist;
+            //create duplicate participantlist so only copy gets deleted
             Participants = new List<IParticipant>();
             foreach (IParticipant part in Participantlist)
             {
@@ -37,8 +40,10 @@ namespace Controller
             _positions = new Dictionary<Section, SectionData>();
             _lapsCompleted = new Dictionary<IParticipant, int>();
             RemoveParticipantList = new List<IParticipant>();
+            Scores = new Queue<int>();
 
-            GiveStartingPositions(Participants, track);
+            SetScores(Participantlist.Count);
+            GiveStartingPositions(Participantlist, track);
             RandomizeEquipment();
             SetTimer();
             Start();
@@ -261,6 +266,8 @@ namespace Controller
                     {
                         currentSection.Right = null;
                     }
+                    IParticipant p = StaticParticipants.First(x => x == part);
+                    p.Points += Scores.Dequeue();
                 }
             }
             return;
@@ -356,6 +363,18 @@ namespace Controller
 
             }
         }
+        // create points based on contestant numbers with 1st place always one point more
+        public void SetScores(int length)
+        {
+            Scores.Enqueue(length + 1);
+            length--;
+            while (length > 0)
+            {
+                Scores.Enqueue(length);
+                length--;
+            }
+        }
+
         // Cleanup events
         public void Clean()
         {

@@ -14,17 +14,9 @@ namespace Model
             Tracks = new Queue<Track>();
 
         }
-        public List<IParticipant> Participants
-        {
-            get;
-            set;
-        }
-        public Queue<Track> Tracks
-        {
-            get;
-            set;
-        }
-
+        public List<IParticipant> Participants { get; set; }
+        public Queue<Track> Tracks { get; set; }
+        public List<Score> Scores { get; set; }
         public Track NextTrack()
         {
             if (Tracks.Count == 0)
